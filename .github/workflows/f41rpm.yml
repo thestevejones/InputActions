@@ -1,15 +1,7 @@
 name: Fedora 42 Build and RPM Package for InputActions
 
 on:
-  workflow_dispatch: # manual trigger
-  push:
-    branches: [ main ]
-    paths-ignore: [ "**.md" ]
-  pull_request:
-    branches: [ main ]
-    paths-ignore: [ "**.md" ]
-  schedule:
-    - cron: "0 0 * * *"
+  workflow_dispatch: # Manual trigger only
 
 jobs:
   build:
@@ -21,6 +13,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install System Dependencies
         run: |
@@ -39,6 +33,10 @@ jobs:
           make -j$(nproc)
           make install
 
+      - name: Inject CPack Setup
+        run: |
+          sed -i '1s/^/project(InputActions VERSION 1.0.0)\ninclude(CPack)\n/' ${{github.workspace}}/CMakeLists.txt
+
       - name: Configure CMake for InputActions
         run: |
           cmake -B ${{github.workspace}}/build \
@@ -47,10 +45,6 @@ jobs:
                 -DCMAKE_INSTALL_PREFIX=/usr \
                 -DCMAKE_BUILD_TYPE=Release \
                 -DCMAKE_PREFIX_PATH=/usr/local
-
-      - name: Inject CPack into CMakeLists.txt
-        run: |
-          echo 'include(CPack)' >> ${{github.workspace}}/CMakeLists.txt
 
       - name: Build InputActions
         run: |
