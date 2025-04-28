@@ -1,7 +1,7 @@
 name: Fedora 41 Build and RPM Package for InputActions
 
 on:
-  workflow_dispatch: # allow manual trigger
+  workflow_dispatch: # manual trigger
   push:
     branches: [ main ]
     paths-ignore: [ "**.md" ]
@@ -42,6 +42,10 @@ jobs:
       - name: Configure CMake for InputActions
         run: |
           cmake -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local
+
+      - name: Inject CPack into CMakeLists.txt
+        run: |
+          echo 'include(CPack)' >> ${{github.workspace}}/CMakeLists.txt
 
       - name: Build InputActions
         run: |
