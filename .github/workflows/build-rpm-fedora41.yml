@@ -39,13 +39,13 @@ jobs:
           make -j$(nproc)
           make install
 
-      - name: Configure CMake for InputActions
-        run: |
-          cmake -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local
-
       - name: Inject CPack into CMakeLists.txt
         run: |
           echo 'include(CPack)' >> ${{github.workspace}}/CMakeLists.txt
+          
+      - name: Configure CMake for InputActions
+        run: |
+          cmake -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local
 
       - name: Build InputActions
         run: |
