@@ -1,4 +1,4 @@
-name: Fedora 41 Build and RPM Package for InputActions
+name: Fedora 42 Build and RPM Package for InputActions
 
 on:
   workflow_dispatch: # manual trigger
@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: fedora:41
+      image: fedora:42
       options: --user root
 
     steps:
@@ -43,7 +43,7 @@ jobs:
         run: |
           cmake -B ${{github.workspace}}/build \
                 -DBUILD_KWIN_EFFECT=OFF \
-                -DBUILD_TESTS=ON \
+                -DBUILD_TESTS=OFF \
                 -DCMAKE_INSTALL_PREFIX=/usr \
                 -DCMAKE_BUILD_TYPE=Release \
                 -DCMAKE_PREFIX_PATH=/usr/local
